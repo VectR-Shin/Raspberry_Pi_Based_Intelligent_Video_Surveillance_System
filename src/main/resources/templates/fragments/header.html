@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header th:fragment="header(currentPage)" class="site-header">
+
+    <div class="header-inner">
+
+        <!-- 로고 -->
+        <a th:href="@{/main}" class="logo">
+            CCTV
+        </a>
+
+        <!-- 로그인하지 않은 상태 -->
+        <div sec:authorize="isAnonymous()">
+            <a th:href="@{/oauth2/authorization/keycloak}"
+               class="header-button login-button">
+                로그인
+            </a>
+        </div>
+
+        <!-- 로그인한 상태 -->
+        <div sec:authorize="isAuthenticated()"
+             class="user-menu">
+
+            <span class="user-email"
+                  sec:authentication="principal.email">
+            </span>
+
+            <!-- /main에서는 기기 버튼 -->
+            <a th:if="${currentPage == 'main'}"
+               th:href="@{/devices}"
+               class="header-button navigation-button">
+                기기
+            </a>
+
+            <!-- /devices에서는 로그 버튼 -->
+            <a th:if="${currentPage == 'devices'}"
+               th:href="@{/main}"
+               class="header-button navigation-button">
+                로그
+            </a>
+
+            <!-- 로그아웃 -->
+            <form th:action="@{/logout}" method="post">
+                <button type="submit"
+                        class="header-button logout-button">
+                    로그아웃
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+    <style>
+        .site-header {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            flex: 0 0 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 14px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .header-button {
+            height: 40px;
+            padding: 0 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .navigation-button,
+        .login-button {
+            border: none;
+            background: #2563eb;
+            color: white;
+        }
+
+        .navigation-button:hover,
+        .login-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .logout-button {
+            border: 1px solid #dbeafe;
+            background: white;
+            color: #475569;
+        }
+
+        .logout-button:hover {
+            background: #f1f5f9;
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 14px 16px;
+            }
+
+            .user-menu {
+                gap: 8px;
+            }
+
+            .user-email {
+                display: none;
+            }
+        }
+    </style>
+
+</header>
+
+</html>
